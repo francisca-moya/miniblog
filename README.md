@@ -236,3 +236,7 @@ El texto se escribe en Markdown, un lenguaje de marcado muy sencillo:
 Los principales problemas que encontré fueron el error al escribir el nombre del archivo LICENSE y el conflicto que apareció al fusionar las dos ramas de los teléfonos.
 Al final conseguí corregir el nombre del archivo, resolver el conflicto y completar las fusiones.
 Con esta práctica he aprendido a utilizar Git y GitHub, trabajar con ramas, guardar cambios, crear Pull Requests y solucionar conflictos.
+
+## Licencia
+
+El proyecto incluye un archivo `LICENSE` en la raíz del repositorio, donde se especifican las condiciones de uso y distribución del código.
