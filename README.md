@@ -75,3 +75,164 @@ revisión; después entra como `docente.demo` (o como administrador), revísala 
 
 > **Importante:** borra estos usuarios (en `/admin/users/`, como administrador) o cambia su contraseña
 > antes de publicar el blog en internet. Contraseñas conocidas en un servidor público son un riesgo.
+
+## Cómo he desplegado el proyecto
+
+Para realizar esta práctica he utilizado Debian, Git y GitHub. He aprendido a descargar el proyecto, instalarlo, trabajar con ramas y guardar los cambios que he ido haciendo.
+
+### 1.- Preparar el entorno
+
+Primero instalé los programas necesarios:
+
+    sudo apt update
+    sudo apt install git openssh-client php-cli php-sqlite3 php-xml php-mbstring php-intl composer
+
+- `sudo apt update`: actualiza la lista de paquetes.
+- `sudo apt install`: instala los programas necesarios.
+
+Después comprobé las versiones:
+
+    git --version
+    php -v
+    composer --version
+
+También configuré Git con mi nombre y correo:
+
+    git config --global user.name "Francisca Moya"
+    git config --global user.email "francisca.moya@proton.me"
+
+### 2.- Crear mi fork y descargar el proyecto
+
+Primero hice un fork del repositorio original en GitHub. Después descargué mi copia al ordenador:
+
+    git clone git@github.com:francisca-moya/miniblog.git
+    cd miniblog
+
+- `git clone`: descarga el repositorio.
+- `cd`: entra en la carpeta del proyecto.
+
+Para comprobar los repositorios remotos utilicé:
+
+    git remote -v
+
+### 3.- Instalar y probar el proyecto
+
+Instalé las dependencias y preparé la aplicación:
+
+    composer install
+    php bin/console create-schema
+    php bin/console app:create-user admin "Administrador"
+    php -S localhost:8000 -t public
+
+- `composer install`: instala las dependencias.
+- `create-schema`: prepara la base de datos.
+- `app:create-user`: crea el usuario administrador.
+- `php -S`: inicia el servidor local.
+
+Después entré en `http://localhost:8000` para comprobar que la página funcionaba correctamente.
+
+### 4.- Conectar con el repositorio original
+
+Añadí el repositorio original como remoto con el nombre `upstream`:
+
+    git remote add upstream https://github.com/mpgprofe/miniblog.git
+    git remote -v
+
+Utilicé estos comandos para obtener e integrar cambios:
+
+    git fetch upstream
+    git merge upstream/master
+
+- `git fetch`: descarga información del repositorio remoto.
+- `git merge`: integra los cambios en la rama actual.
+
+### 5.- Crear una rama y añadir la licencia
+
+Creé una rama nueva para añadir el archivo de licencia:
+
+    git switch -c add-license
+
+Después añadí el archivo y guardé los cambios:
+
+    git add LICESE
+    git commit -m "Archivo de licencia de uso"
+
+Me equivoqué al escribir el nombre del archivo (`LICESE` en lugar de `LICENSE`), así que tuve que corregirlo:
+
+    git mv LICESE LICENSE
+    git commit -m "Fix: Nombre de archivo LICENSE"
+    git push --set-upstream origin add-license
+
+- `git switch -c`: crea una rama nueva.
+- `git add`: prepara los cambios.
+- `git commit`: guarda los cambios.
+- `git mv`: cambia el nombre de un archivo.
+- `git push`: sube los cambios a GitHub.
+
+Después creé un Pull Request en mi propio fork, lo fusioné con `master` y eliminé la rama.
+
+### 6.- Actualizar el repositorio local
+
+Volví a `master` y descargué los cambios de GitHub:
+
+    git switch master
+    git pull origin master
+    git branch -d add-license
+    git log --oneline --graph
+
+- `git switch master`: vuelve a la rama principal.
+- `git pull`: actualiza el repositorio local.
+- `git branch -d`: elimina una rama.
+- `git log --oneline --graph`: muestra el historial de cambios.
+
+### 7.- Practicar los conflictos de fusión
+
+Para practicar los conflictos creé dos ramas:
+
+    git switch -c telefono-a
+
+Modifiqué el teléfono en el archivo `config/packages/twig.yaml` y guardé el cambio:
+
+    git commit -am "Teléfono de secretaría"
+
+Después creé la segunda rama:
+
+    git switch master
+    git switch -c telefono-b
+
+Volví a modificar la misma línea con otro teléfono:
+
+    git commit -am "Teléfono de jefatura"
+
+Para provocar el conflicto fusioné las dos ramas:
+
+    git switch master
+    git merge telefono-a
+    git merge telefono-b
+
+Git detectó que las dos ramas habían modificado la misma línea.
+Abrí el archivo para solucionar el problema:
+
+    nano config/packages/twig.yaml
+
+Elegí el teléfono que quería conservar y eliminé los marcadores del conflicto.
+Finalmente guardé la solución:
+
+    git add config/packages/twig.yaml
+    git commit -m "Fusiona telefono-b resolviendo el conflicto"
+    git log --oneline --graph --all
+
+### 8.- Documentación y problemas encontrados
+
+Durante la práctica también aprendí que el archivo `README.md` sirve para explicar de qué trata un proyecto, cómo instalarlo y cómo utilizarlo.
+El texto se escribe en Markdown, un lenguaje de marcado muy sencillo:
+
+- `#`: sirve para crear títulos.
+- `##`: sirve para crear subtítulos.
+- `*` o `-`: sirven para crear listas.
+- `` ` ``: sirve para escribir comandos o código dentro de un texto.
+- ` ``` `: permite crear bloques de código.
+
+Los principales problemas que encontré fueron el error al escribir el nombre del archivo LICENSE y el conflicto que apareció al fusionar las dos ramas de los teléfonos.
+Al final conseguí corregir el nombre del archivo, resolver el conflicto y completar las fusiones.
+Con esta práctica he aprendido a utilizar Git y GitHub, trabajar con ramas, guardar cambios, crear Pull Requests y solucionar conflictos.
