@@ -25,3 +25,7 @@ jobs:
 
       - name: Instalar dependencias
         run: composer install --no-interaction --prefer-dist
+      - name: Prueba de fallo
+        run: |
+          echo "Provocando un fallo intencionado"
+          exit 1
